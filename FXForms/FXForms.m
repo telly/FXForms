@@ -3129,6 +3129,10 @@ static void FXFormPreprocessFieldDictionary(NSMutableDictionary *dictionary)
     {
         _imagePickerController = [[UIImagePickerController alloc] init];
         _imagePickerController.delegate = self;
+        _imagePickerController.mediaTypes = @[(NSString *)kUTTypeImage];
+        _imagePickerController.allowsEditing = YES;
+        _imagePickerController.modalPresentationStyle = UIModalPresentationFormSheet;
+        
         [self setSourceType:UIImagePickerControllerSourceTypePhotoLibrary];
     }
     return _imagePickerController;
@@ -3152,8 +3156,32 @@ static void FXFormPreprocessFieldDictionary(NSMutableDictionary *dictionary)
 - (void)didSelectWithTableView:(UITableView *)tableView controller:(UIViewController *)controller
 {
     [self becomeFirstResponder];
+    
+    void(^presentationTask)() = ^{
     [tableView deselectRowAtIndexPath:tableView.indexPathForSelectedRow animated:YES];
     [controller presentViewController:self.imagePickerController animated:YES completion:NULL];
+    };
+    
+    if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
+        UIActionSheet *actionSheet = [[UIActionSheet alloc] bk_initWithTitle:nil];
+        
+        [actionSheet bk_addButtonWithTitle:NSLocalizedString(@"Take Photo", @"Actionsheet profile pic") handler:^{
+            self.imagePickerController.sourceType = UIImagePickerControllerSourceTypeCamera;
+            presentationTask();
+        }];
+        
+        [actionSheet bk_addButtonWithTitle:NSLocalizedString(@"Select from Library", @"Actionsheet profile pic") handler:^{
+            self.imagePickerController.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+            presentationTask();
+        }];
+        
+        actionSheet.cancelButtonIndex = [actionSheet addButtonWithTitle:NSLocalizedString(@"Cancel", @"Alertview cancel button")];
+        
+        [actionSheet showFromRect:self.bounds inView:self animated:YES];
+    }
+    else {
+        presentationTask();
+    }
 }
 
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
