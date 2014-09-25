@@ -2302,6 +2302,26 @@ static void FXFormPreprocessFieldDictionary(NSMutableDictionary *dictionary)
     [self setAccessoryView:editingAccessoryView];
 }
 
+- (void)layoutSubviews
+{
+    [super layoutSubviews];
+    
+    if ([NSLocale isDeviceLanguageRTL])
+    {
+        self.textLabel.textAlignment = NSTextAlignmentRight;
+        
+        CGRect textFrame = self.textLabel.frame;
+        textFrame.origin.x = CGRectGetWidth(self.bounds) - CGRectGetMaxX(textFrame);
+        
+        self.textLabel.frame = textFrame;
+        
+        CGRect accessoryFrame = self.accessoryView.frame;
+        accessoryFrame.origin = CGPointMake(10.f, accessoryFrame.origin.y);
+        
+        self.accessoryView.frame = accessoryFrame;
+    }
+}
+
 - (UITableView *)tableView
 {
     UITableView *view = (UITableView *)[self superview];
@@ -2378,7 +2398,10 @@ static void FXFormPreprocessFieldDictionary(NSMutableDictionary *dictionary)
     }
     else if ([self.field isSubform] || self.field.segue)
     {
-        self.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        UIImageView *disclosureView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"disclosure-indicator"]];
+        disclosureView.transform = TVDisclosureIndicatorTransformIdentity;
+        
+        self.accessoryView = disclosureView;
     }
     else if ([self.field.type isEqualToString:FXFormFieldTypeBoolean] || [self.field.type isEqualToString:FXFormFieldTypeOption])
     {
@@ -3285,22 +3308,19 @@ static void FXFormPreprocessFieldDictionary(NSMutableDictionary *dictionary)
 @end
 
 
-@interface FXFormOptionSegmentsCell ()
-
-@property (nonatomic, strong, readwrite) UISegmentedControl *segmentedControl;
-
-@end
-
-
 @implementation FXFormOptionSegmentsCell
 
 - (void)setUp
 {
-    self.segmentedControl = [[UISegmentedControl alloc] initWithItems:@[]];
+    self.accessoryView = [[UISegmentedControl alloc] initWithItems:@[]];
     [self.segmentedControl addTarget:self action:@selector(valueChanged) forControlEvents:UIControlEventValueChanged];
-    [self.contentView addSubview:self.segmentedControl];
     
     self.selectionStyle = UITableViewCellSelectionStyleNone;
+}
+
+- (UISegmentedControl *)segmentedControl
+{
+    return (id)self.accessoryView;
 }
 
 - (void)layoutSubviews
@@ -3309,11 +3329,11 @@ static void FXFormPreprocessFieldDictionary(NSMutableDictionary *dictionary)
     
     [self.segmentedControl sizeToFit];
     
-    CGRect segmentedControlFrame = self.segmentedControl.frame;
-    segmentedControlFrame.origin.x = self.contentView.frame.size.width - FXFormFieldPaddingRight - segmentedControlFrame.size.width;
-    segmentedControlFrame.origin.y = roundf((self.contentView.frame.size.height - segmentedControlFrame.size.height) / 2);
-    
-    self.segmentedControl.frame = segmentedControlFrame;
+    // hack
+    if (![NSLocale isDeviceLanguageRTL])
+    {
+        self.segmentedControl.frame = CGRectOffset(self.segmentedControl.frame, -CGRectGetWidth(self.segmentedControl.bounds), 0);
+    }
 }
 
 - (void)update
