@@ -173,7 +173,7 @@ static NSString *const FXFormFieldTypeImage = @"image";
 @end
 
 
-@interface FXFormViewController : UIViewController <FXFormFieldViewController, FXFormControllerDelegate>
+@interface FXFormViewController : TVViewController <FXFormFieldViewController, FXFormControllerDelegate>
 
 @property (nonatomic, readonly) FXFormController *formController;
 @property (nonatomic, strong) IBOutlet UITableView *tableView;
