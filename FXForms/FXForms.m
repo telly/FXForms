@@ -3158,8 +3158,8 @@ static void FXFormPreprocessFieldDictionary(NSMutableDictionary *dictionary)
     [self becomeFirstResponder];
     
     void(^presentationTask)() = ^{
-    [tableView deselectRowAtIndexPath:tableView.indexPathForSelectedRow animated:YES];
-    [controller presentViewController:self.imagePickerController animated:YES completion:NULL];
+        [tableView deselectRowAtIndexPath:tableView.indexPathForSelectedRow animated:YES];
+        [controller presentViewController:self.imagePickerController animated:YES completion:NULL];
     };
     
     if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
@@ -3307,10 +3307,12 @@ static void FXFormPreprocessFieldDictionary(NSMutableDictionary *dictionary)
 {
     [super layoutSubviews];
     
+    [self.segmentedControl sizeToFit];
+    
     CGRect segmentedControlFrame = self.segmentedControl.frame;
-    segmentedControlFrame.origin.x = self.textLabel.frame.origin.x + self.textLabel.frame.size.width + FXFormFieldPaddingLeft;
-    segmentedControlFrame.origin.y = (self.contentView.frame.size.height - segmentedControlFrame.size.height) / 2;
-    segmentedControlFrame.size.width = self.contentView.bounds.size.width - segmentedControlFrame.origin.x - FXFormFieldPaddingRight;
+    segmentedControlFrame.origin.x = self.contentView.frame.size.width - FXFormFieldPaddingRight - segmentedControlFrame.size.width;
+    segmentedControlFrame.origin.y = roundf((self.contentView.frame.size.height - segmentedControlFrame.size.height) / 2);
+    
     self.segmentedControl.frame = segmentedControlFrame;
 }
 
