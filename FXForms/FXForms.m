@@ -32,6 +32,7 @@
 
 #import "FXForms.h"
 #import <objc/runtime.h>
+#import "TVImagePickerController.h"
 
 
 #pragma GCC diagnostic ignored "-Wobjc-missing-property-synthesis"
@@ -3150,7 +3151,7 @@ static void FXFormPreprocessFieldDictionary(NSMutableDictionary *dictionary)
 {
     if (!_imagePickerController)
     {
-        _imagePickerController = [[UIImagePickerController alloc] init];
+        _imagePickerController = [[TVImagePickerController alloc] init];
         _imagePickerController.delegate = self;
         _imagePickerController.mediaTypes = @[(NSString *)kUTTypeImage];
         _imagePickerController.allowsEditing = YES;
