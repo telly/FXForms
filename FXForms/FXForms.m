@@ -2185,6 +2185,7 @@ static void FXFormPreprocessFieldDictionary(NSMutableDictionary *dictionary)
     {
         self.tableView = [[UITableView alloc] initWithFrame:[UIScreen mainScreen].applicationFrame
                                                       style:UITableViewStyleGrouped];
+        self.tableView.backgroundColor = [UIColor colorWithRGB:0xFAFCFE];
     }
     if (!self.tableView.superview)
     {
