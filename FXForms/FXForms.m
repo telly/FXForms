@@ -2308,7 +2308,7 @@ static void FXFormPreprocessFieldDictionary(NSMutableDictionary *dictionary)
 {
     [super layoutSubviews];
     
-    if ([NSLocale isDeviceLanguageRTL])
+    if ([NSLocale isPreferredLanguageRTL])
     {
         self.textLabel.textAlignment = NSTextAlignmentRight;
         
@@ -3332,7 +3332,7 @@ static void FXFormPreprocessFieldDictionary(NSMutableDictionary *dictionary)
     [self.segmentedControl sizeToFit];
     
     // hack
-    if (![NSLocale isDeviceLanguageRTL])
+    if (![NSLocale isPreferredLanguageRTL])
     {
         self.segmentedControl.frame = CGRectOffset(self.segmentedControl.frame, -CGRectGetWidth(self.segmentedControl.bounds), 0);
     }
