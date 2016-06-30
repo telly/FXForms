@@ -2304,26 +2304,6 @@ static void FXFormPreprocessFieldDictionary(NSMutableDictionary *dictionary)
     [self setAccessoryView:editingAccessoryView];
 }
 
-- (void)layoutSubviews
-{
-    [super layoutSubviews];
-    
-    if ([NSLocale isPreferredLanguageRTL])
-    {
-        self.textLabel.textAlignment = NSTextAlignmentRight;
-        
-        CGRect textFrame = self.textLabel.frame;
-        textFrame.origin.x = CGRectGetWidth(self.bounds) - CGRectGetMaxX(textFrame);
-        
-        self.textLabel.frame = textFrame;
-        
-        CGRect accessoryFrame = self.accessoryView.frame;
-        accessoryFrame.origin = CGPointMake(10.f, accessoryFrame.origin.y);
-        
-        self.accessoryView.frame = accessoryFrame;
-    }
-}
-
 - (UITableView *)tableView
 {
     UITableView *view = (UITableView *)[self superview];
